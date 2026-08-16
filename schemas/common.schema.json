@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://athenara.org/schemas/common.json",
+  "title": "Athenara shared definitions",
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Lowercase hyphenated identifier. Must match the resource filename (without extension). Ids are unique across the whole registry."
+    },
+    "slugList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/slug" },
+      "uniqueItems": true
+    },
+    "uri": { "type": "string", "format": "uri", "pattern": "^https?://" },
+    "isoDate": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "disclosure": {
+      "type": "string",
+      "enum": ["fully-open", "partial", "results-only", "verified-private"],
+      "description": "How much of the underlying system is public. Athenara rewards transparency but never requires giving away an edge."
+    },
+    "prereqLevel": {
+      "type": "string",
+      "enum": ["none", "basic", "moderate", "advanced", "expert"],
+      "description": "none = no familiarity needed; basic = introductory familiarity; moderate = working knowledge; advanced = deep hands-on experience; expert = specialist."
+    },
+    "prerequisites": {
+      "type": "object",
+      "required": ["trading", "ai", "programming", "setup"],
+      "additionalProperties": false,
+      "description": "What this entry assumes of its user, per axis — so a beginner and an expert can each find what fits. Rate honestly; entries are findable by these on the Browse page.",
+      "properties": {
+        "trading": {
+          "$ref": "#/$defs/prereqLevel",
+          "description": "Trading/markets knowledge assumed, e.g. order types, backtesting concepts, market microstructure."
+        },
+        "ai": {
+          "$ref": "#/$defs/prereqLevel",
+          "description": "AI/ML/agentic knowledge assumed, e.g. LLM prompting, RL training, agent frameworks."
+        },
+        "programming": {
+          "$ref": "#/$defs/prereqLevel",
+          "description": "Software engineering skill assumed to use it."
+        },
+        "setup": {
+          "$ref": "#/$defs/prereqLevel",
+          "description": "Installation/setup effort: none = nothing to install (e.g. a paper), basic = one command, moderate = config plus API keys, advanced = multi-service or GPU setup, expert = research code you must assemble yourself."
+        }
+      }
+    },
+    "runnable": {
+      "type": "object",
+      "description": "How to actually run this resource — the fields that turn a catalog entry into something usable.",
+      "properties": {
+        "install": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Verbatim, copy-pasteable install commands, in order."
+        },
+        "entrypoint": {
+          "type": "string",
+          "description": "The command that starts it, verbatim."
+        },
+        "requires": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "External prerequisites a user must have: API keys, market-data subscriptions, GPU, broker account, e.g. 'OpenAI API key', 'Alpaca paper account'."
+        },
+        "runtime": {
+          "type": "string",
+          "description": "Hard compatibility constraint, e.g. 'python >= 3.10', 'node >= 20'."
+        }
+      }
+    },
+    "resourceCore": {
+      "type": "object",
+      "required": ["id", "name", "summary", "added", "prerequisites"],
+      "properties": {
+        "prerequisites": { "$ref": "#/$defs/prerequisites" },
+        "id": { "$ref": "#/$defs/slug" },
+        "name": { "type": "string", "maxLength": 120 },
+        "summary": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "One factual sentence. No marketing language."
+        },
+        "authors": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "People or organizations behind the resource."
+        },
+        "origin": {
+          "type": "string",
+          "enum": ["external", "native"],
+          "default": "external",
+          "description": "external = lives elsewhere (e.g. GitHub), Athenara is the discovery layer. native = published on Athenara."
+        },
+        "repo": { "$ref": "#/$defs/uri" },
+        "website": { "$ref": "#/$defs/uri" },
+        "license": {
+          "type": "string",
+          "description": "SPDX identifier, or 'proprietary' / 'unknown'."
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z0-9]+([ -][a-z0-9]+)*$" },
+          "uniqueItems": true
+        },
+        "markets": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Markets covered, e.g. equities, crypto, forex, futures, multi-asset."
+        },
+        "added": { "$ref": "#/$defs/isoDate", "description": "Date added to the registry." },
+        "superseded_by": {
+          "$ref": "#/$defs/slug",
+          "description": "Slug of the entry (same section) that replaces this one, if it is obsolete."
+        },
+        "implements": {
+          "$ref": "#/$defs/slugList",
+          "description": "Knowledge-graph edge → architectures: patterns or frameworks this entry realizes."
+        },
+        "paper": {
+          "$ref": "#/$defs/slugList",
+          "description": "Knowledge-graph edge → papers: research describing this entry."
+        },
+        "uses_dataset": {
+          "$ref": "#/$defs/slugList",
+          "description": "Knowledge-graph edge → datasets this entry trains or evaluates on."
+        },
+        "evaluated_on": {
+          "$ref": "#/$defs/slugList",
+          "description": "Knowledge-graph edge → benchmarks this entry has been evaluated on."
+        },
+        "reproduces": {
+          "$ref": "#/$defs/slugList",
+          "description": "Knowledge-graph edge → papers: published work this entry independently reproduces."
+        },
+        "builds_on": {
+          "$ref": "#/$defs/slugList",
+          "description": "Knowledge-graph edge → any section: prior work this entry directly extends."
+        }
+      }
+    }
+  }
+}

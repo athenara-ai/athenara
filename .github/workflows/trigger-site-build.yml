@@ -1,0 +1,21 @@
+name: Trigger site build
+# Tells the private site repo (athenara-ai/site) to rebuild athenara.info when
+# entries or schemas change on main. Needs the SITE_DISPATCH_TOKEN secret: a
+# fine-grained PAT with Contents read/write on athenara-ai/site.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "registry/**"
+      - "schemas/**"
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -sf -X POST \
+            -H "Authorization: Bearer ${{ secrets.SITE_DISPATCH_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/athenara-ai/site/dispatches \
+            -d '{"event_type":"registry-updated"}'

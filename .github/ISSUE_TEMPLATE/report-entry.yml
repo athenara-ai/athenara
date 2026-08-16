@@ -1,0 +1,19 @@
+name: Report a problem with an entry
+description: Dead link, wrong license, stale metadata, or a disputed claim.
+title: "Fix: "
+labels: [entry-correction]
+body:
+  - type: input
+    id: entry
+    attributes:
+      label: Entry id
+      description: The slug from the page URL, e.g. finmem or buy-and-hold-spy-2024.
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's wrong?
+      description: For disputed claims, include evidence — entries converge on what can be verified.
+    validations:
+      required: true

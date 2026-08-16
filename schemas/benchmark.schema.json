@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://athenara.org/schemas/benchmark.json",
+  "title": "Athenara benchmark",
+  "description": "A standardized evaluation for trading agents or financial models. The Markdown body explains tasks and how to run or submit.",
+  "allOf": [
+    {
+      "$ref": "common.json#/$defs/resourceCore"
+    }
+  ],
+  "type": "object",
+  "properties": {
+    "metrics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Metrics reported, e.g. 'sharpe', 'max-drawdown', 'annualized-return', 'accuracy'."
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What is evaluated, e.g. 'stock-trading', 'crypto-trading', 'sentiment-analysis'."
+    }
+  },
+  "unevaluatedProperties": false
+}

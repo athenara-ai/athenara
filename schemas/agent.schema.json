@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://athenara.org/schemas/agent.json",
+  "title": "Athenara agent card",
+  "description": "An AI trading agent or agent system.",
+  "allOf": [
+    {
+      "$ref": "common.json#/$defs/resourceCore"
+    },
+    {
+      "$ref": "common.json#/$defs/runnable"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "disclosure"
+  ],
+  "properties": {
+    "disclosure": {
+      "$ref": "common.json#/$defs/disclosure"
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Underlying models, e.g. 'claude-sonnet-4-5', 'gpt-4o', 'custom-rl-policy'."
+    },
+    "frameworks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Agent/trading frameworks used, e.g. 'langgraph', 'finrl', 'freqtrade'."
+    },
+    "strategy": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Strategy classes, e.g. 'market-making', 'trend-following', 'sentiment', 'portfolio-management', 'rl-policy'."
+    },
+    "risk_controls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "e.g. 'position-limits', 'stop-loss', 'drawdown-cutoff', 'human-approval'."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "maintained",
+        "experimental",
+        "archived"
+      ]
+    }
+  },
+  "unevaluatedProperties": false
+}

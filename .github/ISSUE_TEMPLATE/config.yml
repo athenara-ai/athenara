@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Add a resource (no YAML required)
+    url: https://athenara.info/contribute/
+    about: The fastest path — a form that generates a valid entry and opens the pull request for you.

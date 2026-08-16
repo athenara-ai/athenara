@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://athenara.org/schemas/architecture.json",
+  "title": "Athenara architecture",
+  "description": "A design pattern or framework for building agentic trading systems. The Markdown body documents how the design works; profitability claims belong in results, not here.",
+  "allOf": [
+    {
+      "$ref": "common.json#/$defs/resourceCore"
+    },
+    {
+      "$ref": "common.json#/$defs/runnable"
+    }
+  ],
+  "type": "object",
+  "properties": {
+    "aka": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Alternative names for the pattern, e.g. 'planner-executor', 'debate'."
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Constituent roles/parts, e.g. 'researcher', 'trader', 'critic', 'risk-manager'."
+    }
+  },
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://athenara.org/schemas/dataset.json",
+  "title": "Athenara dataset card",
+  "description": "A dataset for building or evaluating trading agents. Document known limitations and methodology in the Markdown body.",
+  "allOf": [
+    {
+      "$ref": "common.json#/$defs/resourceCore"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "access"
+  ],
+  "properties": {
+    "access": {
+      "type": "string",
+      "enum": [
+        "open",
+        "registration",
+        "commercial"
+      ],
+      "description": "open = freely downloadable; registration = free but gated; commercial = paid."
+    },
+    "source": {
+      "type": "string",
+      "description": "Where the data originates, e.g. 'SEC EDGAR', 'NASDAQ ITCH', 'exchange APIs'."
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "assets": {
+          "type": "string",
+          "description": "e.g. 'S&P 500 constituents', '4,775 US tickers'."
+        },
+        "start": {
+          "$ref": "common.json#/$defs/isoDate"
+        },
+        "end": {
+          "$ref": "common.json#/$defs/isoDate"
+        },
+        "frequency": {
+          "type": "string",
+          "description": "e.g. 'daily', '1-minute', 'tick', 'event-based'."
+        }
+      }
+    },
+    "formats": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "e.g. 'csv', 'parquet', 'jsonl'."
+    },
+    "size": {
+      "type": "string",
+      "description": "Approximate size, e.g. '29M rows', '12 GB'."
+    }
+  },
+  "unevaluatedProperties": false
+}

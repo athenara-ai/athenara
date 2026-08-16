@@ -1,0 +1,65 @@
+name: Validate registry
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Validate entries
+        id: validate
+        run: |
+          set +e
+          OUTPUT=$(npm run validate 2>&1)
+          CODE=$?
+          echo "$OUTPUT"
+          {
+            echo "output<<ATHENARA_EOF"
+            echo "$OUTPUT" | tail -60
+            echo "ATHENARA_EOF"
+          } >> "$GITHUB_OUTPUT"
+          exit $CODE
+      # Fork PRs get a read-only token, so commenting can fail there — the
+      # validation log above still shows the same messages.
+      - name: Comment on the pull request
+        if: always()
+        continue-on-error: true
+        uses: actions/github-script@v7
+        env:
+          VALIDATE_OUTPUT: ${{ steps.validate.outputs.output }}
+          VALIDATE_OUTCOME: ${{ steps.validate.outcome }}
+        with:
+          script: |
+            const marker = "<!-- athenara-validate -->";
+            const ok = process.env.VALIDATE_OUTCOME === "success";
+            const body = ok
+              ? `${marker}\n✅ **Every entry validates.** Thank you for contributing — a maintainer will review shortly.`
+              : `${marker}\n🔍 **The entry isn't valid yet — here's what to fix.** These are format checks, not a judgment on your contribution; each message names the field and quotes the schema's description of it.\n\n\`\`\`\n${process.env.VALIDATE_OUTPUT}\n\`\`\`\n\nTip: the [Add a resource form](https://athenara.info/contribute/) generates valid entries, and every field is documented in [\`schemas/\`](https://github.com/athenara-ai/athenara/tree/main/schemas). Push a fix to this branch and this comment will update.`;
+            const { data: comments } = await github.rest.issues.listComments({
+              ...context.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find((c) => c.body.startsWith(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                ...context.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }

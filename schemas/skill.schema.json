@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://athenara.org/schemas/skill.json",
+  "title": "Athenara skill",
+  "description": "A reusable capability for a coding, research, or trading agent \u2014 instructions, tools, or packaged workflows another agent can adopt.",
+  "allOf": [
+    {
+      "$ref": "common.json#/$defs/resourceCore"
+    },
+    {
+      "$ref": "common.json#/$defs/runnable"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "targets"
+  ],
+  "properties": {
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "description": "Agent runtimes the skill is built for, e.g. 'claude-code', 'codex', 'generic'."
+    },
+    "install": {
+      "type": "string",
+      "description": "How to install or load it \u2014 a command, or a path/URL to copy."
+    }
+  },
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,241 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://athenara.org/schemas/result.json",
+  "title": "Athenara result report",
+  "description": "A performance result for an agent. Every field exists so a skeptical reader can understand what the numbers mean: a return without its period, mode, cost model, capital base, sample size, and selection history is a marketing claim, not a result. Negative results are first-class.",
+  "type": "object",
+  "required": ["id", "agent", "mode", "period", "markets", "capital", "costs", "metrics", "selection", "runs", "data", "verification", "reported"],
+  "properties": {
+    "id": { "$ref": "common.json#/$defs/slug" },
+    "agent": {
+      "$ref": "common.json#/$defs/slug",
+      "description": "Registry slug of the agent that produced this result. Results-only participants publish a minimal agent card with disclosure: results-only."
+    },
+    "benchmark": {
+      "$ref": "common.json#/$defs/slug",
+      "description": "Registry slug of the benchmark, if the result comes from one."
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["backtest", "paper-trading", "live"],
+      "description": "A backtest is never labeled live. Backtests are evidence about an agent, not ranked performances."
+    },
+    "period": {
+      "type": "object",
+      "required": ["start", "end"],
+      "additionalProperties": false,
+      "properties": {
+        "start": { "$ref": "common.json#/$defs/isoDate" },
+        "end": { "$ref": "common.json#/$defs/isoDate" }
+      },
+      "description": "The evaluation period the metrics cover."
+    },
+    "development_period": {
+      "type": "object",
+      "required": ["start", "end"],
+      "additionalProperties": false,
+      "properties": {
+        "start": { "$ref": "common.json#/$defs/isoDate" },
+        "end": { "$ref": "common.json#/$defs/isoDate" }
+      },
+      "description": "The data period seen during development and tuning. Whether the result is out-of-sample is derived from this, never asserted. Omitting it renders as 'development period not declared'."
+    },
+    "markets": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" }
+    },
+    "capital": {
+      "type": "object",
+      "required": ["initial", "currency"],
+      "additionalProperties": false,
+      "properties": {
+        "initial": { "type": "number", "exclusiveMinimum": 0 },
+        "currency": { "type": "string", "description": "ISO code, e.g. USD." },
+        "max_leverage": { "type": "number", "minimum": 0 }
+      },
+      "description": "The capital base. +200% on $500 and on $5M are different claims."
+    },
+    "costs": {
+      "type": "object",
+      "required": ["commission_model", "fills"],
+      "additionalProperties": false,
+      "properties": {
+        "commission_model": {
+          "type": "string",
+          "description": "How commissions/fees were modeled, verbatim, e.g. '0.1% per trade', 'IBKR tiered', 'none — single commission-free ETF trade'."
+        },
+        "slippage_model": {
+          "type": "string",
+          "description": "How slippage/impact was modeled, e.g. '5 bps per fill', 'none'."
+        },
+        "financing_included": {
+          "type": "boolean",
+          "description": "Whether margin/funding costs are reflected."
+        },
+        "fills": {
+          "type": "string",
+          "enum": ["modeled", "actual"],
+          "description": "modeled = simulated fills; actual = real executed fills."
+        }
+      },
+      "description": "The cost model is part of the result. A no-cost backtest is rendered visibly degraded."
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Point estimates for the run (or the mean across runs when runs.n > 1 — put spread in runs.dispersion). Percentages are plain numbers: 12.5 means 12.5%. max_drawdown_pct is negative.",
+      "minProperties": 1,
+      "properties": {
+        "total_return_pct": { "type": "number" },
+        "annualized_return_pct": { "type": "number" },
+        "sharpe": { "type": "number" },
+        "sortino": { "type": "number" },
+        "max_drawdown_pct": { "type": "number", "maximum": 0 },
+        "max_drawdown_days": { "type": "number", "minimum": 0, "description": "Longest peak-to-recovery stretch, in days." },
+        "worst_month_pct": { "type": "number" },
+        "volatility_pct": { "type": "number" },
+        "win_rate_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "turnover": { "type": "number" }
+      },
+      "additionalProperties": { "type": "number" }
+    },
+    "n_trades": { "type": "integer", "minimum": 0, "description": "Sample size: number of trades in the period." },
+    "n_days": { "type": "integer", "minimum": 0, "description": "Sample size: number of trading days in the period." },
+    "selection": {
+      "type": "object",
+      "required": ["variants_tested"],
+      "additionalProperties": false,
+      "properties": {
+        "variants_tested": {
+          "oneOf": [
+            { "type": "integer", "minimum": 1 },
+            { "const": "unknown" }
+          ],
+          "description": "How many strategy/parameter variants were tried before this one was selected. A Sharpe ratio without a trial count is uninterpretable (deflated-Sharpe). 'unknown' is allowed but rendered visibly."
+        },
+        "selection_method": {
+          "type": "string",
+          "description": "How this variant was chosen, e.g. 'only variant', 'best walk-forward Sharpe of 12'."
+        }
+      }
+    },
+    "runs": {
+      "type": "object",
+      "required": ["n"],
+      "additionalProperties": false,
+      "properties": {
+        "n": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of independent runs behind the reported metrics. LLM agents produce materially different runs on identical inputs — for model-driven agents a single run is anecdote, not evidence; report n >= 3 and the dispersion."
+        },
+        "seed_policy": {
+          "type": "string",
+          "description": "e.g. 'deterministic strategy', 'temperature 0.7, no seed control', 'fixed seeds 1-5'."
+        },
+        "dispersion": {
+          "type": "object",
+          "description": "Spread across runs per metric, e.g. sharpe: {std: 0.4, min: 0.9, max: 2.1}. Expected whenever n > 1.",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "std": { "type": "number" },
+              "min": { "type": "number" },
+              "max": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "baseline": {
+      "type": "object",
+      "required": ["name", "return_pct"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "description": "e.g. 'buy-and-hold SPY'." },
+        "return_pct": { "type": "number", "description": "Baseline total return over the same period." },
+        "correlation": { "type": "number", "minimum": -1, "maximum": 1 }
+      },
+      "description": "A comparable passive baseline over the same period. Excess return is computed, not claimed."
+    },
+    "net_of_fees": {
+      "type": "boolean",
+      "description": "Whether metrics are net of any management/platform fees (distinct from trading costs)."
+    },
+    "data": {
+      "type": "object",
+      "required": ["source"],
+      "additionalProperties": false,
+      "properties": {
+        "source": { "type": "string", "description": "e.g. 'daily OHLCV, Yahoo Finance', 'Polygon.io minute bars'." },
+        "point_in_time": { "type": "boolean", "description": "Whether the data reflects only information available at each decision time (no look-ahead)." },
+        "survivorship_bias_free": { "type": "boolean", "description": "Whether delisted/dead assets are included in the universe." }
+      },
+      "description": "Look-ahead and survivorship bias are the two silent backtest killers; declare them explicitly."
+    },
+    "model": { "type": "string", "description": "Model in use during the run, if the agent is model-based, e.g. 'claude-sonnet-4-5'." },
+    "agent_version": { "type": "string", "description": "Version or commit hash of the agent that produced this result." },
+    "verification": {
+      "type": "object",
+      "required": ["method"],
+      "additionalProperties": false,
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["author-reported", "ci-reproduced", "broker-attested", "point-in-time-committed"],
+          "description": "The mechanism, not a trust rank: author-reported = the author's own numbers, not independently checked (the honest default); ci-reproduced = independently re-run from published code and data; broker-attested = a third party with read access to the account attests the record; point-in-time-committed = positions/signals were hash-committed publicly before the fact."
+        },
+        "by": { "type": "string", "description": "Who performed the verification (GitHub handle, org, or service)." },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["type", "url"],
+            "additionalProperties": false,
+            "properties": {
+              "type": { "type": "string", "description": "e.g. 'ci-run', 'myfxbook', 'darwinex', 'broker-statement', 'vbase-commitment', 'reproduction-writeup'." },
+              "url": { "$ref": "common.json#/$defs/uri" },
+              "hash": { "type": "string" },
+              "retrieved": { "$ref": "common.json#/$defs/isoDate" }
+            }
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "superseded", "withdrawn"],
+      "default": "active",
+      "description": "Withdrawn results stay in the registry and count in the agent's disclosure record — silent retraction is not possible here."
+    },
+    "supersedes": {
+      "$ref": "common.json#/$defs/slug",
+      "description": "Slug of the earlier result this one replaces."
+    },
+    "reported": { "$ref": "common.json#/$defs/isoDate" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "verification": {
+            "type": "object",
+            "properties": { "method": { "not": { "const": "author-reported" } } }
+          }
+        },
+        "required": ["verification"]
+      },
+      "then": {
+        "properties": {
+          "verification": {
+            "type": "object",
+            "required": ["method", "evidence"]
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

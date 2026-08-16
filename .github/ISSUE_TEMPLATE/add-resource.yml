@@ -1,0 +1,35 @@
+name: Suggest a resource
+description: Can't open a pull request? Tell us what's missing and a maintainer will add it.
+title: "Add: "
+labels: [resource-suggestion]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The fastest path is the [Add a resource form](https://athenara.info/contribute/) — it generates a valid entry and opens the pull request for you. Use this issue only if that path doesn't work for you.
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options: [agent, architecture, dataset, skill, paper, benchmark]
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Name
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Link (repository, paper, or homepage)
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: What is it, in a sentence or two?
+      description: Factual, no marketing — this becomes the entry's summary.
+    validations:
+      required: true

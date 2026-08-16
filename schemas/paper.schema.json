@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://athenara.org/schemas/paper.json",
+  "title": "Athenara research entry",
+  "description": "A research paper connected to implementations, datasets, and agents via `related`. Reproduction notes belong in the Markdown body.",
+  "allOf": [
+    {
+      "$ref": "common.json#/$defs/resourceCore"
+    }
+  ],
+  "type": "object",
+  "required": [
+    "year"
+  ],
+  "properties": {
+    "year": {
+      "type": "integer",
+      "minimum": 1900,
+      "maximum": 2100
+    },
+    "venue": {
+      "type": "string",
+      "description": "e.g. 'arXiv', 'NeurIPS 2024', 'ICLR 2025'."
+    },
+    "arxiv": {
+      "type": "string",
+      "pattern": "^\\d{4}\\.\\d{4,5}(v\\d+)?$",
+      "description": "arXiv identifier, e.g. '2412.20138'."
+    },
+    "doi": {
+      "type": "string"
+    }
+  },
+  "unevaluatedProperties": false
+}

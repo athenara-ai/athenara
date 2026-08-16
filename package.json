@@ -1,0 +1,16 @@
+{
+  "name": "athenara",
+  "version": "0.1.0",
+  "description": "The open ecosystem for agentic trading — the public registry",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "gray-matter": "^4.0.3"
+  }
+}
