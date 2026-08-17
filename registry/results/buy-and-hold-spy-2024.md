@@ -61,5 +61,13 @@ parameters, so nothing was fitted to the evaluation window.
 
 ## Reproduction
 
-Fetch SPY daily data for 2024 from any total-return source and apply the formulas above; results
-should match to within rounding of the data vendor's adjustments.
+The agent's reference implementation reproduces this result in one command:
+
+```
+git clone https://github.com/athenara-ai/buy-and-hold-baseline
+cd buy-and-hold-baseline
+python agent.py --ticker SPY --start 2024-01-02 --end 2024-12-31
+```
+
+Or fetch SPY daily data for 2024 from any total-return source and apply the formulas above;
+results should match to within rounding of the data vendor's adjustments.

@@ -19,6 +19,7 @@ If neither works for you, open a [resource suggestion issue](.github/ISSUE_TEMPL
 5. Connect it to the graph with the typed edge fields — `implements`, `paper`, `uses_dataset`, `evaluated_on`, `reproduces`, `builds_on`. These connections are what make the registry more than a list; reverse links are computed automatically.
 6. Declare `prerequisites` honestly — the four required axes (`trading`, `ai`, `programming`, `setup`, each `none`–`expert`) are how a newcomer to trading, an AI researcher, or a quant with no ML background finds what fits them. Rating everything `none` to look approachable wastes exactly the reader you were trying to reach. Freeform `tags` remain yours to invent.
 7. Run `npm run validate` before opening the PR. CI runs the same check and replies on the PR with plain-language guidance if something's off.
+8. A native entry (`origin: native`) for anything runnable must carry its definition — a `repo` or the `install`/`entrypoint` fields — so an agent or reader can actually obtain and run it. Prose alone doesn't merge.
 
 ## Reporting results
 
