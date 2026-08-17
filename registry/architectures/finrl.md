@@ -17,10 +17,11 @@ prerequisites:
   programming: moderate
   setup: moderate
 implements: [rl-policy]
+paper: [finrl-paper]
 ---
 
 FinRL supplies gym-style environments built from market data for indices including NASDAQ-100,
-S&P 500, HSI, and SSE 50, together with implementations of DQN, DDPG, PPO, SAC, A2C, and TD3 and a
+S&P 500, HSI, and SSE 50, together with implementations of DDPG, PPO, SAC, A2C, and TD3 and a
 backtesting module. Environments model practical frictions such as transaction costs and liquidity
 constraints — the fidelity issues that make or break the RL-policy pattern (see related).
 

@@ -5,7 +5,7 @@ summary: A Python cryptocurrency trading bot with backtesting, hyperparameter op
 authors: [Freqtrade development team]
 origin: external
 repo: https://github.com/freqtrade/freqtrade
-website: https://www.freqtrade.io
+website: https://www.freqtrade.io/en/stable/
 license: GPL-3.0
 disclosure: fully-open
 status: active

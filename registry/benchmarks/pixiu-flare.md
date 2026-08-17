@@ -24,7 +24,6 @@ multiple financial tasks and document types; and **FLARE**, the evaluation bench
 originally spanned five financial NLP tasks plus a prediction task over nine datasets
 ([arXiv:2306.05443](https://arxiv.org/abs/2306.05443)).
 
-FLARE has since grown into the FinBen evaluation suite (~32 datasets across sentiment analysis,
-classification, knowledge extraction, numerical reasoning, summarization, credit scoring, and
-forecasting) with a public leaderboard; English, Spanish, and Chinese are covered. Models and
+FLARE has since grown into the FinBen evaluation suite (42 datasets spanning 24 tasks, see the
+FinBen entry) with a public leaderboard; English, Spanish, and Chinese are covered. Models and
 evaluation datasets are published on Hugging Face under The FinAI organization.

@@ -32,4 +32,5 @@ scores gives modest gains for transformer models; they publish a reproducible pi
 extending the dataset. Paper: [arXiv:2402.06698](https://arxiv.org/abs/2402.06698).
 
 **License note:** CC BY-NC 4.0 on the Hugging Face card — commercial use requires permission. The
-GitHub repository carries no explicit license.
+GitHub repository's LICENSE file carries the same CC BY-NC 4.0 text (GitHub's license detector
+reports "Other" only because the file's header line is malformed).

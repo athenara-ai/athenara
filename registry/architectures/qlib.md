@@ -16,6 +16,7 @@ prerequisites:
   ai: advanced
   programming: moderate
   setup: moderate
+paper: [qlib-paper]
 ---
 
 Qlib provides a full quant research stack: a storage and data-handling layer optimized for
