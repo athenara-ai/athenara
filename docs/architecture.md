@@ -28,7 +28,7 @@ Seven resource types: `agent`, `architecture`, `dataset`, `skill`, `paper`, `ben
 
 - `scripts/validate.mjs` (ajv) is the only validator; it gates every PR in CI. Type schemas set `unevaluatedProperties: false` so typos fail loudly, and error messages quote the schema's own field descriptions.
 - The site declares **no second schema layer** (no zod on its content collections), to avoid a drifting duplicate definition.
-- The site's **contribute form is generated from these schemas at build time**, so it cannot drift either. This is the heart of the contribution funnel: validation happens before the PR exists (a rejected first PR loses ~30% of first-time contributors), and the form emits a prefilled `github.com/.../new/main?filename=…&value=…` URL — GitHub auto-forks, the contributor never writes YAML. Watch the documented 414-URL-length limit; the form falls back to clipboard past ~6 KB.
+- The site's **contribute form is generated from these schemas at build time**, so it cannot drift either. This is the heart of the contribution funnel: validation happens before the PR exists (a rejected first PR loses ~30% of first-time contributors), and the form emits a prefilled `github.com/.../new/main?filename=…&value=…` URL — GitHub auto-forks, the contributor never writes YAML. URL-length limit, measured empirically 2026-08-17: prefill works to ~6,980 chars total; beyond that GitHub degrades messily (HTTP 500 from ~7,000, dropped connections near 8,100, 414 past ~8,200). The form's clipboard fallback past 6,000 chars keeps ~15% headroom. Path-segment filenames (`registry/{type}/{id}.md`) parse correctly into the editor's breadcrumbs.
 
 ## Governance defaults
 
