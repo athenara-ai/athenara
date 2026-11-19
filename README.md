@@ -48,3 +48,7 @@ The easiest path is the **Add a resource** form on the site — it generates a v
 ## License
 
 Code is MIT. Registry content (`registry/`) is [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — free to reuse with attribution. Indexed external projects keep their own licenses, recorded in each entry.
+
+---
+
+Powered by [Selfish Labs](https://selfishlabs.ai).
